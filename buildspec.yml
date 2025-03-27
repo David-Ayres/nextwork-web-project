@@ -3,24 +3,22 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      java: corretto8
+      java: corretto11  # Required for AWS SDK compatibility
+
   pre_build:
     commands:
-      - echo Initializing environment
-      - export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain nextwork --domain-owner 2422-0129-2097 --region eu-west-1 --query authorizationToken --output text`
+      - echo "Fetching CodeArtifact token..."
+      - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain nextwork --repository nextwork-devops-cicd --domain-owner 242201292097 --region eu-west-1 --query authorizationToken --output text)
+      - echo "Token acquired (first 10 chars): ${CODEARTIFACT_AUTH_TOKEN:0:10}..."
 
   build:
     commands:
-      - echo Build started on `date`
-      - mvn -s settings.xml compile
-  post_build:
-    commands:
-      - echo Build completed on `date`
-      - mvn -s settings.xml package
+      - mvn -B -e clean compile -s settings.xml
+      - mvn -B -e package -s settings.xml
+
 artifacts:
   files:
-    - target/nextwork-web-project.war
+    - target/*.war
     - appspec.yml
     - scripts/**/*
   discard-paths: no
-

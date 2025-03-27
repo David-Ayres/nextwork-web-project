@@ -1,31 +1,31 @@
 <settings>
-<servers>
-  <server>
-    <id>nextwork-nextwork-devops-cicd</id>
-    <username>aws</username>
-    <password>${env.CODEARTIFACT_AUTH_TOKEN}</password>
-  </server>
-</servers>
-<profiles>
-  <profile>
-    <id>nextwork-nextwork-devops-cicd</id>
-    <activation>
-      <activeByDefault>true</activeByDefault>
-    </activation>
-    <repositories>
-      <repository>
-        <id>nextwork-nextwork-devops-cicd</id>
-        <url>https://nextwork-242201292097.d.codeartifact.eu-west-1.amazonaws.com/maven/nextwork-devops-cicd/</url>
-      </repository>
-    </repositories>
-  </profile>
-</profiles>
-<mirrors>
-  <mirror>
-    <id>nextwork-nextwork-devops-cicd</id>
-    <name>nextwork-nextwork-devops-cicd</name>
-    <url>https://nextwork-242201292097.d.codeartifact.eu-west-1.amazonaws.com/maven/nextwork-devops-cicd/</url>
-    <mirrorOf>*</mirrorOf>
-  </mirror>
-</mirrors>
+  <servers>
+    <!-- For CodeArtifact -->
+    <server>
+      <id>codeartifact</id>
+      <username>aws</username>
+      <password>${env.CODEARTIFACT_AUTH_TOKEN}</password>
+    </server>
+    
+    <!-- For Maven Central fallback -->
+    <server>
+      <id>central</id>
+      <configuration>
+        <httpHeaders>
+          <property>
+            <name>User-Agent</name>
+            <value>Maven</value>
+          </property>
+        </httpHeaders>
+      </configuration>
+    </server>
+  </servers>
+
+  <mirrors>
+    <mirror>
+      <id>codeartifact</id>
+      <url>https://nextwork-242201292097.d.codeartifact.eu-west-1.amazonaws.com/maven/nextwork-devops-cicd/</url>
+      <mirrorOf>*,!central</mirrorOf> <!-- Mirror everything EXCEPT central -->
+    </mirror>
+  </mirrors>
 </settings>
