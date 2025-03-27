@@ -3,13 +3,13 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      java: corretto11  # Required for AWS SDK compatibility
+      java: corretto11
 
   pre_build:
     commands:
       - echo "Fetching CodeArtifact token..."
       - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain nextwork --repository nextwork-devops-cicd --domain-owner 242201292097 --region eu-west-1 --query authorizationToken --output text)
-      - echo "Token acquired (first 10 chars): ${CODEARTIFACT_AUTH_TOKEN:0:10}..."
+      - echo "Token acquired"
 
   build:
     commands:
